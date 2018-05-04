@@ -1,4 +1,6 @@
 # encoding=utf-8
+# Author: kellyhwong
+# Date: 2018.4.25
 import requests
 from bs4 import BeautifulSoup
 
@@ -31,7 +33,7 @@ def get_eng_def(word):
 # tmp=get_eng_def('apple')
 # print(tmp)
 
-def main(word_list = ['apple','banana','orange','lemon']):
+def main(word_list = ['apple','banana','orange','lemon','copacetic']):
     out_html_head = """<!DOCTYPE html><html lang="zh-CN"><head><title>Kelly's Personal Dict</title></head><body><table border="1">"""
     out_html_tail = """</table></body></html>"""
     th_head = """<th>"""
@@ -40,13 +42,26 @@ def main(word_list = ['apple','banana','orange','lemon']):
     tr_tail = """</tr>"""
     out_html = ""
     out_html += out_html_head
+    count = 0
     for word in word_list:
         out_html += tr_head # table row begins
         out_html += th_head
         out_html += word
         out_html += th_tail
         out_html += th_head
-        out_html += get_eng_def(word)
+        word_def = get_eng_def(word)
+        word_soup = BeautifulSoup(word_def,"lxml")
+        word_def_text = ""
+        for i in word_soup.find_all(attrs={"class":"query"}):
+            word_def_text += i.text
+            word_def_text += " "
+        print(word + ":")
+        print(word_def_text)
+        # with open(str(count) + '.html', 'w') as f:
+            # print(word_def, file=f)
+        count += 1
+        # print(word_def)
+        out_html += word_def
         out_html += th_tail # table row ends
     out_html += out_html_tail
     filename = 'out.html'
