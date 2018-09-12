@@ -4,7 +4,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-DEF_DEBUG = 0
+DEF_DEBUG = 1
 
 def download_page(url):
     headers = {
@@ -19,11 +19,15 @@ word_url = look_up_prefix + word
 html_doc = download_page(word_url).decode('utf-8')
 
 def get_eng_def(word):
+    print("word to be searched: ")
+    print(word)
     word_url = look_up_prefix + word
     html_doc = download_page(word_url).decode('utf-8')
     soup = BeautifulSoup(html_doc,"lxml")
     # 为啥这么写？
     all_dict_div = soup.find_all("div", {"class": 'cdo-dblclick-area'})
+    with open("all_dict_div", 'w') as f:
+            print(all_dict_div, file=f)
     eng_dict_b = all_dict_div[0].find("b", {"class": 'def'})
     if DEF_DEBUG:
         filename = 'out.html'
@@ -34,7 +38,20 @@ def get_eng_def(word):
 # tmp=get_eng_def('apple')
 # print(tmp)
 
-def main(word_list = ['apple','banana','orange','lemon','copacetic']):
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Parsing Words From Text File')
+    parser.add_argument("-f", "--file", dest="filename", required=True,
+                        help='the name of the text file')
+    args = parser.parse_args()
+    print(args.filename)
+    filename = args.filename
+    print(filename)
+    file = open(filename, 'r')
+    # for word in file.readlines():
+        # print(word)
+
     out_html_head = """<!DOCTYPE html><html lang="zh-CN"><head><title>Kelly's Personal Dict</title></head><body><table border="1">"""
     out_html_tail = """</table></body></html>"""
     th_head = """<th>"""
@@ -44,7 +61,10 @@ def main(word_list = ['apple','banana','orange','lemon','copacetic']):
     out_html = ""
     out_html += out_html_head
     count = 0
-    for word in word_list:
+
+    for word in file.readlines():
+        # 去掉换行符
+        word = word.strip()
         out_html += tr_head # table row begins
         out_html += th_head
         out_html += word
@@ -64,10 +84,17 @@ def main(word_list = ['apple','banana','orange','lemon','copacetic']):
         # print(word_def)
         out_html += word_def
         out_html += th_tail # table row ends
+
     out_html += out_html_tail
     filename = 'out.html'
     with open(filename, 'w') as f:
         print(out_html, file=f)
 
+# Test main
+# Please input -f word-list.txt
 if __name__ == '__main__':
     main()
+
+    # print(args.filename)
+
+    # main(word_list = args.word_list)
