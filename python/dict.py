@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: kelly hwong
 # Date: 2018.4.25
-import requests
+
 from bs4 import BeautifulSoup
 
 DEF_DEBUG = 1

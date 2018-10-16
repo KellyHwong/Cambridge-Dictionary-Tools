@@ -1,7 +1,7 @@
 # encoding=utf-8
 # Author: kellyhwong
 # Date: 2018.4.25
-import requests
+
 from bs4 import BeautifulSoup
 
 DEF_DEBUG = 0

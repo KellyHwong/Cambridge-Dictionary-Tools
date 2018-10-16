@@ -7,7 +7,8 @@ Choose the "chrome" folder when loading unpacked extension in the Chrome extensi
 # PersonalDict
 PersonalDict
 ## Usage
-python3 PersonalDictMain.py -f word-list.txt
+python3 dict.py -f word-list-1.txt
+python3 dict.py -f word-list-toefl.txt
 
 # Log
 ## 单词列表txt文件输入，及去掉换行符
