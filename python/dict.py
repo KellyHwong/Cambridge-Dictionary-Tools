@@ -1,41 +1,41 @@
-# encoding=utf-8
-# Author: kellyhwong
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Author: kelly hwong
 # Date: 2018.4.25
 import requests
 from bs4 import BeautifulSoup
 
 DEF_DEBUG = 1
 
-def download_page(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36'
-    }
-    data = requests.get(url, headers=headers).content
-    return data
+from Utilities import downloadPage
 
 look_up_prefix = 'https://dictionary.cambridge.org/zhs/%E8%AF%8D%E5%85%B8/%E8%8B%B1%E8%AF%AD/'
 word = 'apple'
 word_url = look_up_prefix + word
-html_doc = download_page(word_url).decode('utf-8')
+html_doc = downloadPage(word_url).decode('utf-8')
 
-def get_eng_def(word):
+def getEngDef(word):
     print("word to be searched: ")
     print(word)
     word_url = look_up_prefix + word
-    html_doc = download_page(word_url).decode('utf-8')
+    html_doc = downloadPage(word_url).decode('utf-8')
     soup = BeautifulSoup(html_doc,"lxml")
     # 为啥这么写？
     all_dict_div = soup.find_all("div", {"class": 'cdo-dblclick-area'})
     with open("all_dict_div", 'w') as f:
             print(all_dict_div, file=f)
     eng_dict_b = all_dict_div[0].find("b", {"class": 'def'})
+
+    #
     if DEF_DEBUG:
-        filename = 'out.html'
+        filename = 'debug.html'
         with open(filename, 'w') as f:
-            print(download_page(word_url).decode('utf-8'), file=f)
+            print(downloadPage(word_url).decode('utf-8'), file=f)
+
+    #
     return str(eng_dict_b)
 
-# tmp=get_eng_def('apple')
+# tmp=getEngDef('apple')
 # print(tmp)
 
 def main():
@@ -45,9 +45,9 @@ def main():
     parser.add_argument("-f", "--file", dest="filename", required=True,
                         help='the name of the text file')
     args = parser.parse_args()
-    print(args.filename)
+    # print(args.filename)
     filename = args.filename
-    print(filename)
+    # print(filename)
     file = open(filename, 'r')
     # for word in file.readlines():
         # print(word)
@@ -63,14 +63,14 @@ def main():
     count = 0
 
     for word in file.readlines():
-        # 去掉换行符
+        # 去掉换行符等空白字符
         word = word.strip()
         out_html += tr_head # table row begins
         out_html += th_head
         out_html += word
         out_html += th_tail
         out_html += th_head
-        word_def = get_eng_def(word)
+        word_def = getEngDef(word)
         word_soup = BeautifulSoup(word_def,"lxml")
         word_def_text = ""
         for i in word_soup.find_all(attrs={"class":"query"}):

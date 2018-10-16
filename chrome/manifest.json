@@ -1,0 +1,10 @@
+{
+  "name": "Cambridge Dictionary Tool",
+  "description": "Simple Chrome Extension Tool for Looking Up Words on Cambridge Dictionary",
+  "version": "0.0",
+  "permissions": ["contextMenus", "tabs"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "manifest_version": 2
+}
